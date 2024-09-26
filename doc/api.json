@@ -1,0 +1,1856 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Mlaku-Mulu",
+        "description": "RESTful API pendataan perjalanan turis yang mencatat data perjalanan destinasi",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Muhammad Nurman Hadi",
+            "email": "nurman.hadi@hotmail.com",
+            "url": "https://github.com/nurmanhadi"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://github.com/nestjs/docs.nestjs.com/blob/master/LICENSE"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api/v1",
+            "description": "Server Local"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth":{
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "security": [
+        {
+            "bearerAuth":[]
+        }
+    ],
+    "tags": [
+        {
+        "name": "Auth",
+        "description": "Operasi terkait autentikasi dan otorisasi, termasuk login dan logout untuk admin dan turis."
+        },
+        {
+        "name": "Tourist",
+        "description": "Operasi terkait data turis, termasuk pendaftaran, pembaruan, dan pengambilan informasi turis."
+        },
+        {
+        "name": "Trip",
+        "description": "Operasi terkait pengelolaan perjalanan, termasuk pendaftaran dan pembaruan data perjalanan."
+        },
+        {
+        "name": "Destination",
+        "description": "Operasi terkait pengelolaan destinasi wisata, termasuk penambahan, pembaruan, dan penghapusan destinasi."
+        },
+        {
+        "name": "History",
+        "description": "Operasi yang hanya bisa diakses oleh tourist untuk melihat riwayat perjalanan."
+        }
+    ],
+    "paths": {
+        "/auth/admins/register":{
+            "post":{
+                "summary": "register admin",
+                "tags": ["Auth"],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "email":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "password":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "Register admin success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "string"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "email":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "Bad request",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/admins/login":{
+            "post":{
+                "summary": "login admin",
+                "tags": ["Auth"],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "email":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "password":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "headers": {
+                            "Set-Cookie":{
+                                "description": "Refresh token",
+                                "schema":{
+                                    "type": "string",
+                                    "example": "refresh-token=your-jwt-token; HttpOnly; Secure; Path=/; Max-Age=86400"
+                                }
+                            }
+                        },
+                        "description": "Login admin success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "access_token":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/admins/logout":{
+            "post":{
+                "summary": "logout admin",
+                "tags": ["Auth"],
+                "parameters": [{
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "description": "Bearer token",
+                    "schema":{
+                        "type": "string",
+                        "description": "Bearer token"
+                    }
+                }],
+                "responses": {
+                    "200":{
+                        "description": "Logout admin success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/tourists/login":{
+            "post":{
+                "summary": "login tourist",
+                "tags": ["Auth"],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "email":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "password":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "headers": {
+                            "Set-Cookie":{
+                                "description": "Refresh token",
+                                "schema":{
+                                    "type": "string",
+                                    "example": "refresh-token-tourist=your-jwt-token; HttpOnly; Secure; Path=/; Max-Age=86400"
+                                }
+                            }
+                        },
+                        "description": "Login tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "access_token":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/tourists/logout":{
+            "post":{
+                "summary": "logout tourist",
+                "tags": ["Auth"],
+                "parameters": [{
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "description": "Bearer token",
+                    "schema":{
+                        "type": "string",
+                        "description": "Bearer token"
+                    }
+                }],
+                "responses": {
+                    "200":{
+                        "description": "Logout tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh-token":{
+            "post":{
+                "summary": "get new access token",
+                "tags": ["Auth"],
+                "parameters": [{
+                    "in": "header",
+                    "name": "Cookie",
+                    "required": true,
+                    "description": "refresh-token=token",
+                    "schema":{
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200":{
+                        "description": "generate new access token success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "access_token":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh-token-tourist":{
+            "post":{
+                "summary": "get new access token for tourist",
+                "tags": ["Auth"],
+                "parameters": [{
+                    "in": "header",
+                    "name": "Cookie",
+                    "required": true,
+                    "description": "refresh-token-tourist=token",
+                    "schema":{
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200":{
+                        "description": "generate new access token success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "access_token":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tourists":{
+            "post":{
+                "summary": "Create tourist",
+                "tags": ["Tourist"],
+                "parameters": [{
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "description": "Bearer token",
+                    "schema":{
+                        "type": "string"
+                    }
+                }],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "email":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "password":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "passportNumber":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "phone":{
+                                        "type": "string",
+                                        "maxLength": 20,
+                                        "nullable": false
+                                    },
+                                    "address":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "Create tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "string"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "email":{
+                                                    "type": "string"
+                                                },
+                                                "passportNumber":{
+                                                    "type": "string"
+                                                },
+                                                "phone":{
+                                                    "type": "string"
+                                                },
+                                                "address":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "summary": "Get all tourist",
+                "tags": ["Tourist"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "required": true,
+                        "description": "number page",
+                        "schema":{
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "per-page",
+                        "required": true,
+                        "description": "per-page number",
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Get tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "items":{
+                                                "type": "object",
+                                                "properties": {
+                                                    "id":{
+                                                        "type": "string"
+                                                    },
+                                                    "name":{
+                                                        "type": "string"
+                                                    },
+                                                    "email":{
+                                                        "type": "string"
+                                                    },
+                                                    "passportNumber":{
+                                                        "type": "string"
+                                                    },
+                                                    "phone":{
+                                                        "type": "string"
+                                                    },
+                                                    "address":{
+                                                        "type": "string"
+                                                    },
+                                                    "createdAt":{
+                                                        "type": "string"
+                                                    },
+                                                    "updatedAt":{
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "metadata":{
+                                            "type": "array",
+                                            "items":{
+                                                "type": "object",
+                                                "properties": {
+                                                    "page":{
+                                                        "type": "number"
+                                                    },
+                                                    "per_page":{
+                                                        "type": "number"
+                                                    },
+                                                    "page_count":{
+                                                        "type": "number"
+                                                    },
+                                                    "total_count":{
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tourists/{touristId}":{
+            "patch":{
+                "summary": "Update tourist",
+                "tags": ["Tourist"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "param uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "email":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "passportNumber":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "phone":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "address":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Update tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "string"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "email":{
+                                                    "type": "string"
+                                                },
+                                                "passportNumber":{
+                                                    "type": "string"
+                                                },
+                                                "phone":{
+                                                    "type": "string"
+                                                },
+                                                "address":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "summary": "Get tourist by id",
+                "tags": ["Tourist"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "param uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Get tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "string"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "email":{
+                                                    "type": "string"
+                                                },
+                                                "passportNumber":{
+                                                    "type": "string"
+                                                },
+                                                "phone":{
+                                                    "type": "string"
+                                                },
+                                                "address":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                },
+                                                "trips":{
+                                                    "type": "array",
+                                                    "items":{
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id":{
+                                                                "type": "number"
+                                                            },
+                                                            "touristId":{
+                                                                "type": "string"
+                                                            },
+                                                            "startDate":{
+                                                                "type": "string"
+                                                            },
+                                                            "endDate":{
+                                                                "type": "string"
+                                                            },
+                                                            "status":{
+                                                                "type": "string"
+                                                            },
+                                                            "createdAt":{
+                                                                "type": "string"
+                                                            },
+                                                            "updatedAt":{
+                                                                "type": "string"
+                                                            },
+                                                            "descriptions":{
+                                                                "type": "array",
+                                                                "items":{
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "id":{
+                                                                            "type": "number"
+                                                                        },
+                                                                        "tripId":{
+                                                                            "type": "number"
+                                                                        },
+                                                                        "name":{
+                                                                            "type": "string"
+                                                                        },
+                                                                        "country":{
+                                                                            "type": "string"
+                                                                        },
+                                                                        "city":{
+                                                                            "type": "string"
+                                                                        },
+                                                                        "createdAt":{
+                                                                            "type": "string"
+                                                                        },
+                                                                        "updatedAt":{
+                                                                            "type": "string"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "summary": "Delete tourist",
+                "tags": ["Tourist"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "param uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Update tourist success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tourists/{touristId}/trips":{
+            "post":{
+                "summary": "Create trip",
+                "tags": ["Trip"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "startDate":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "endDate":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "Create trip success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "number"
+                                                },
+                                                "touristId":{
+                                                    "type": "string"
+                                                },
+                                                "startDate":{
+                                                    "type": "string"
+                                                },
+                                                "endDate":{
+                                                    "type": "string"
+                                                },
+                                                "status":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "summary": "Get all trip",
+                "tags": ["Trip"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "required": true,
+                        "description": "number page",
+                        "schema":{
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "per-page",
+                        "required": true,
+                        "description": "per-page number",
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Get trip success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "items":{
+                                                "type": "object",
+                                                "properties": {
+                                                    "id":{
+                                                        "type": "number"
+                                                    },
+                                                    "touristId":{
+                                                        "type": "string"
+                                                    },
+                                                    "startDate":{
+                                                        "type": "string"
+                                                    },
+                                                    "endDate":{
+                                                        "type": "string"
+                                                    },
+                                                    "status":{
+                                                        "type": "string"
+                                                    },
+                                                    "createdAt":{
+                                                        "type": "string"
+                                                    },
+                                                    "updatedAt":{
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tourists/{touristId}/trips/{tripId}":{
+            "patch":{
+                "summary": "Update trip",
+                "tags": ["Trip"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "startDate":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "endDate":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "status":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Update trip success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "number"
+                                                },
+                                                "touristId":{
+                                                    "type": "string"
+                                                },
+                                                "startDate":{
+                                                    "type": "string"
+                                                },
+                                                "endDate":{
+                                                    "type": "string"
+                                                },
+                                                "status":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "summary": "Get all trip",
+                "tags": ["Trip"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Get trip success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "items":{
+                                                "type": "object",
+                                                "properties": {
+                                                    "id":{
+                                                        "type": "number"
+                                                    },
+                                                    "touristId":{
+                                                        "type": "string"
+                                                    },
+                                                    "startDate":{
+                                                        "type": "string"
+                                                    },
+                                                    "endDate":{
+                                                        "type": "string"
+                                                    },
+                                                    "status":{
+                                                        "type": "string"
+                                                    },
+                                                    "createdAt":{
+                                                        "type": "string"
+                                                    },
+                                                    "updatedAt":{
+                                                        "type": "string"
+                                                    },
+                                                    "destinations":{
+                                                        "type": "array",
+                                                        "items":{
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id":{
+                                                                    "type": "number"
+                                                                },
+                                                                "tripId":{
+                                                                    "type": "number"
+                                                                },
+                                                                "name":{
+                                                                    "type": "string"
+                                                                },
+                                                                "country":{
+                                                                    "type": "string"
+                                                                },
+                                                                "city":{
+                                                                    "type": "string"
+                                                                },
+                                                                "createdAt":{
+                                                                    "type": "string"
+                                                                },
+                                                                "updatedAt":{
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "summary": "Delete trip",
+                "tags": ["Trip"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Delete trip success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "items":{
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tourists/{touristId}/trips/{tripId}/destinations":{
+            "post":{
+                "summary": "Create destination",
+                "tags": ["Destination"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "country":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    },
+                                    "city":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Create destination success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "number"
+                                                },
+                                                "tripId":{
+                                                    "type": "number"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "country":{
+                                                    "type": "string"
+                                                },
+                                                "city":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tourists/{touristId}/trips/{tripId}/destinations/desId":{
+            "patch":{
+                "summary": "Update destination",
+                "tags": ["Destination"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "desId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "country":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    },
+                                    "city":{
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Update destination success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "number"
+                                                },
+                                                "tripId":{
+                                                    "type": "number"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "country":{
+                                                    "type": "string"
+                                                },
+                                                "city":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "summary": "Get destination",
+                "tags": ["Destination"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "desId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Get destination success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id":{
+                                                    "type": "number"
+                                                },
+                                                "tripId":{
+                                                    "type": "number"
+                                                },
+                                                "name":{
+                                                    "type": "string"
+                                                },
+                                                "country":{
+                                                    "type": "string"
+                                                },
+                                                "city":{
+                                                    "type": "string"
+                                                },
+                                                "createdAt":{
+                                                    "type": "string"
+                                                },
+                                                "updatedAt":{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "summary": "Delete destination",
+                "tags": ["Destination"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "touristId",
+                        "required": true,
+                        "description": "uuid",
+                        "schema":{
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "tripId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "desId",
+                        "required": true,
+                        "schema":{
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Delete destination success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/history":{
+            "get":{
+                "summary": "Get history tourist",
+                "description": "Available Consume for Tourist",
+                "tags": ["History"],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "description": "Bearer token",
+                        "schema":{
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Get history success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode":{
+                                            "type": "number"
+                                        },
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "items":{
+                                                "type": "object",
+                                                "properties": {
+                                                    "id":{
+                                                        "type": "number"
+                                                    },
+                                                    "touristId":{
+                                                        "type": "string"
+                                                    },
+                                                    "startDate":{
+                                                        "type": "string"
+                                                    },
+                                                    "endDate":{
+                                                        "type": "string"
+                                                    },
+                                                    "status":{
+                                                        "type": "string"
+                                                    },
+                                                    "createdAt":{
+                                                        "type": "string"
+                                                    },
+                                                    "updatedAt":{
+                                                        "type": "string"
+                                                    },
+                                                    "destinations":{
+                                                        "type": "array",
+                                                        "items":{
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id":{
+                                                                    "type": "number"
+                                                                },
+                                                                "tripId":{
+                                                                    "type": "number"
+                                                                },
+                                                                "name":{
+                                                                    "type": "string"
+                                                                },
+                                                                "country":{
+                                                                    "type": "string"
+                                                                },
+                                                                "city":{
+                                                                    "type": "string"
+                                                                },
+                                                                "createdAt":{
+                                                                    "type": "string"
+                                                                },
+                                                                "updatedAt":{
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
