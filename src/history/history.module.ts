@@ -4,8 +4,8 @@ import { HistoryController } from './history.controller';
 import { HistoryService } from './history.service';
 
 @Module({
-    imports:[TripModule],
-    controllers: [HistoryController],
-    providers: [HistoryService]
+  imports: [TripModule],
+  controllers: [HistoryController],
+  providers: [HistoryService],
 })
 export class HistoryModule {}

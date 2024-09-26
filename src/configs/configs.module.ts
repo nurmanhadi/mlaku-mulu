@@ -6,16 +6,17 @@ import { LoggerMiddleware } from './logger.middleware';
 
 @Global()
 @Module({
-    providers: [PrismaService, {
-        provide: APP_FILTER,
-        useClass: ErrorFilter
-    }],
-    exports: [PrismaService]
+  providers: [
+    PrismaService,
+    {
+      provide: APP_FILTER,
+      useClass: ErrorFilter,
+    },
+  ],
+  exports: [PrismaService],
 })
 export class ConfigsModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-        .apply(LoggerMiddleware)
-        .forRoutes('*')
-    }
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
 }

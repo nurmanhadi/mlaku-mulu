@@ -1,23 +1,25 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigsModule } from './configs/configs.module';
 import { AuthModule } from './auth/auth.module';
 import { TouristModule } from './tourist/tourist.module';
 import { TripModule } from './trip/trip.module';
 import { DestinationModule } from './destination/destination.module';
-import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from 'nest-winston';
 import { HistoryModule } from './history/history.module';
 import { MetricModule } from './metric/metric.module';
-import * as winston from 'winston'
+import * as winston from 'winston';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { LoggerMiddleware } from './configs/logger.middleware';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env'
+      envFilePath: '.env',
     }),
     ConfigsModule,
     AuthModule,
@@ -34,22 +36,26 @@ import { LoggerMiddleware } from './configs/logger.middleware';
               colors: true,
               prettyPrint: true,
               processId: true,
-              appName: true
-            })
-          )
-        })
-      ]
+              appName: true,
+            }),
+          ),
+        }),
+      ],
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 6000,
-      limit: 1000
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 6000,
+        limit: 1000,
+      },
+    ]),
     HistoryModule,
-    MetricModule
+    MetricModule,
   ],
-  providers:[{
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard
-  }]
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -5,9 +5,9 @@ import { TripRepository } from './trip.repository';
 import { TouristModule } from 'src/tourist/tourist.module';
 
 @Module({
-    imports: [TouristModule],
-    controllers: [TripController],
-    providers: [TripService, TripRepository],
-    exports: [TripRepository]
+  imports: [TouristModule],
+  controllers: [TripController],
+  providers: [TripService, TripRepository],
+  exports: [TripRepository],
 })
 export class TripModule {}

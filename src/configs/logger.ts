@@ -12,11 +12,9 @@ const logger = createLogger({
         ...meta,
       };
       return JSON.stringify(logMessage);
-    })
+    }),
   ),
-  transports: [
-    new transports.Console(),
-  ],
+  transports: [new transports.Console()],
 });
 
 export default logger;

@@ -7,18 +7,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Global()
 @Module({
-    imports: [
-        JwtModule.registerAsync({
-            global: true,
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: async (configService: ConfigService) => ({
-                secret: configService.get<string>('SECRET_KEY')
-            })
-        })
-    ],
-    controllers: [AuthController],
-    providers:[AuthService,AuthRepository],
-    exports:[AuthService,AuthRepository]
+  imports: [
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('SECRET_KEY'),
+      }),
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, AuthRepository],
+  exports: [AuthService, AuthRepository],
 })
 export class AuthModule {}

@@ -16,12 +16,14 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
   });
-  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER))
-  app.useGlobalPipes(new ValidationPipe())
-  app.useGlobalFilters(new ErrorFilter())
-  app.use(cookieParser('Yare Yareya :)'))
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new ErrorFilter());
+  app.use(cookieParser('Yare Yareya :)'));
   const openApiDocumentPath = path.join(__dirname, '..', 'doc', 'api.json');
-  const openApiDocument = JSON.parse(fs.readFileSync(openApiDocumentPath, 'utf-8'));
+  const openApiDocument = JSON.parse(
+    fs.readFileSync(openApiDocumentPath, 'utf-8'),
+  );
   SwaggerModule.setup('api', app, openApiDocument);
   await app.listen(3000);
 }

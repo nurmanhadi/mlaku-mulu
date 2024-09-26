@@ -6,8 +6,8 @@ import { DestinationRepository } from './destination.repository';
 import { TouristModule } from 'src/tourist/tourist.module';
 
 @Module({
-    imports: [TripModule, TouristModule],
-    controllers: [DestinationController],
-    providers: [DestinationService, DestinationRepository]
+  imports: [TripModule, TouristModule],
+  controllers: [DestinationController],
+  providers: [DestinationService, DestinationRepository],
 })
 export class DestinationModule {}
