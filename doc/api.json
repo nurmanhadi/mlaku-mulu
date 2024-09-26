@@ -16,8 +16,8 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3000/api/v1",
-            "description": "Server Local"
+            "url": "https://superb-olivie-nurman-b8e0af0c.koyeb.app/api/v1",
+            "description": "Server public"
         }
     ],
     "components": {

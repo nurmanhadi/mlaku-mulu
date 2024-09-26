@@ -8,22 +8,24 @@ Mlaku-Mulu adalah RESTful API untuk pendataan perjalanan turis pengelolaan data 
 - Pengelolaan data turis (CRUD).
 - Pengelolaan perjalanan dan destinasi.
 - Riwayat perjalanan turis.
+- Monitoring health
 
 ## Teknologi yang Digunakan
 
-- **Node.js**: Runtime untuk menjalankan aplikasi.
-- **NestJS**: Framework untuk membangun aplikasi server-side.
-- **Prisma**: ORM untuk mengelola database.
-- **PostgreSQL**: Database untuk menyimpan data aplikasi.
-- **Swagger**: Untuk dokumentasi API.
-- **Promotheus**: Monitoring aplikasi
+- **[Node.js](https://nodejs.org/en/download/package-manager)**: Runtime untuk menjalankan aplikasi.
+- **[NestJS](https://nestjs.com/)**: Framework untuk membangun aplikasi server-side.
+- **[Prisma](https://www.prisma.io/)**: ORM untuk mengelola database.
+- **[PostgreSQL](https://www.postgresql.org/)**: Database untuk menyimpan data aplikasi.
+- **[Swagger](https://swagger.io/)**: Untuk dokumentasi API.
+- **[Promotheus](https://prometheus.io/)**: Monitoring aplikasi
+- **[Koyeb](https://koyeb.com/)** : Sebagai media web service untuk deployment
 
 ## Instalasi
 
 1. Clone repositori ini
 
    ```bash
-   git clone https://github.com/username/mlaku-mulu.git
+   git clone https://github.com/nurmanhadi/mlaku-mulu
    ```
 
 2. Masuk ke direktori proyek
@@ -55,11 +57,12 @@ Mlaku-Mulu adalah RESTful API untuk pendataan perjalanan turis pengelolaan data 
 
 ## Dokumentasi API
 
-Dokumentasi dapat di akses **[disini](http://localhost:3000/api)** atau enpoint **/api**
+Dokumentasi dapat di akses **[disini](https://superb-olivie-nurman-b8e0af0c.koyeb.app/api)** atau enpoint **/api**.
+Pastikan untuk Authorize terlebih dahulu dengan memasukan token **[JWT](https://jwt.io/)**
 
 ## Monitoring
 
-Monitoring Dengan **[Promotheus](https://prometheus.io/download/)** bisa diakses di enpoint **/api/metrics**. Bisa diintegrasikan dengan **Grafana** untuk monitoring
+Monitoring Dengan **[Promotheus](https://prometheus.io/download/)** bisa diakses **[disini](https://superb-olivie-nurman-b8e0af0c.koyeb.app/metrics)**. Bisa diintegrasikan dengan **Grafana** untuk monitoring
 
 ## Lisensi
 
